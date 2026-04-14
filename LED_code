@@ -1,0 +1,58 @@
+/*
+ * Animaciones en Matriz LED 8x8 (MAX7219)
+ * Este código alterna entre dos dibujos (Corazón y Carita Feliz) 
+ * utilizando la librería Adafruit_GFX.
+ */
+
+#include <SPI.h>
+#include <Adafruit_GFX.h>
+#include <Max72xxPanel.h>
+
+// Configuración de pines
+int pinCS = 5; 
+// DIN va al pin MOSI (usualmente 23 en ESP32 o 11 en Arduino Uno)
+// CLK va al pin SCK (usualmente 18 en ESP32 o 13 en Arduino Uno)
+
+Max72xxPanel matrix = Max72xxPanel(pinCS, 1, 1);
+
+// --- DIBUJOS PERSONALIZADOS ---
+const unsigned char corazon[] PROGMEM = {
+  B01100110, //  .XX..XX.
+  B11111111, //  XXXXXXXX
+  B11111111, //  XXXXXXXX
+  B11111111, //  XXXXXXXX
+  B01111110, //  .XXXXXX.
+  B00111100, //  ..XXXX..
+  B00011000, //  ...XX...
+  B00000000  //  ........
+};
+
+const unsigned char carita[] PROGMEM = {
+  B00000000, //  ........
+  B01100110, //  .XX..XX. 
+  B01100110, //  .XX..XX. 
+  B00000000, //  ........
+  B10000001, //  X......X 
+  B01000010, //  .X....X. 
+  B00111100, //  ..XXXX.. 
+  B00000000  //  ........
+};
+
+void setup() {
+  matrix.setIntensity(2); // Brillo suave (0 a 15)
+  matrix.setRotation(0);  // Cambia esto (1, 2, 3) si la imagen sale rotada
+}
+
+void loop() {
+  // Mostrar la carita feliz
+  matrix.fillScreen(0); 
+  matrix.drawBitmap(0, 0, carita, 8, 8, 1); 
+  matrix.write(); 
+  delay(1500); 
+
+  // Mostrar el corazón
+  matrix.fillScreen(0); 
+  matrix.drawBitmap(0, 0, corazon, 8, 8, 1); 
+  matrix.write(); 
+  delay(1500); 
+}
