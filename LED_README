@@ -1,5 +1,12 @@
+## 🔌 Conexiones (Esquema SPI para ESP32)
 
-# Animaciones en Matriz LED MAX7219 con Arduino
+| Pin Matriz MAX7219 | Pin ESP32 | Notas |
+| :--- | :--- | :--- |
+| **VCC** | **5V (o VIN)** | La matriz requiere 5V para brillar con intensidad total. |
+| **GND** | **GND** | Tierra común. |
+| **DIN** (Data In) | **GPIO 23** | Pin MOSI estándar en ESP32. |
+| **CS** (Chip Select) | **GPIO 5** | También llamado SS. Puedes cambiarlo en el código. |
+| **CLK** (Clock) | **GPIO 18** | Pin SCK estándar en ESP32. |
 
 Este proyecto demuestra cómo mostrar dibujos personalizados (mapas de bits) y animaciones básicas en un módulo de matriz de LED 8x8 controlado por el chip MAX7219, utilizando la potencia de la librería Adafruit GFX.
 
