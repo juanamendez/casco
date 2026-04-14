@@ -1,0 +1,130 @@
+/*
+ * Proyecto: Rastreador GPS con ESP32 y Telegram
+ * Descripción: Este código obtiene la ubicación de un módulo GPS (ej. Neo-6M)
+ * y la envía como un enlace de Google Maps a través de un bot de Telegram.
+ * * Dependencias (Librerías a instalar en Arduino IDE):
+ * - TinyGPSPlus (para procesar los datos del GPS)
+ */
+
+#include <WiFi.h>
+#include <WiFiClientSecure.h>
+#include <HTTPClient.h>
+#include <TinyGPSPlus.h>
+#include <HardwareSerial.h>
+
+// ==========================================
+// 🔧 CONFIGURACIÓN DE RED (WIFI / HOTSPOT)
+// ==========================================
+// NOTA: Para uso en exteriores, se recomienda poner el SSID y Password 
+// de la zona WiFi compartida desde tu teléfono celular.
+const char* ssid = "TU_RED_WIFI";
+const char* password = "TU_CONTRASEÑA";
+
+// ==========================================
+// 🔑 CONFIGURACIÓN DE TELEGRAM
+// ==========================================
+// ¡IMPORTANTE! No compartas tu Bot Token públicamente.
+String botToken = "PONER_TU_TOKEN_AQUI"; 
+String chatId = "PONER_TU_CHAT_ID_AQUI";
+
+// ==========================================
+// 📡 CONFIGURACIÓN DEL GPS
+// ==========================================
+TinyGPSPlus gps;
+HardwareSerial GPSserial(2);  // Usamos el puerto UART2 del ESP32
+
+bool mensajeEnviado = false; // Bandera para asegurar que solo se envíe una vez
+
+// ==========================================
+// 📩 FUNCIÓN: ENVIAR MENSAJE A TELEGRAM
+// ==========================================
+void enviarMensajeTelegram(double lat, double lon) {
+  WiFiClientSecure client;
+  // client.setInsecure() permite conexiones HTTPS sin validar el certificado SSL,
+  // lo cual es necesario en el ESP32 para conectarse a la API de Telegram fácilmente.
+  client.setInsecure(); 
+
+  HTTPClient https;
+
+  // Formateamos el mensaje. %0A es el código para un salto de línea.
+  String mensaje = "📍 Ubicacion detectada:%0A";
+  mensaje += "https://www.google.com/maps/search/?api=1&query=" + String(lat, 6) + "," + String(lon, 6);
+
+  // Construimos la URL completa para la API de Telegram
+  String url = "https://api.telegram.org/bot" + botToken +
+               "/sendMessage?chat_id=" + chatId +
+               "&text=" + mensaje;
+
+  Serial.println("🌐 Enviando solicitud a Telegram...");
+
+  // Intentamos conectar y enviar el mensaje
+  if (https.begin(client, url)) {
+    int httpCode = https.GET(); // Realizamos la petición GET
+
+    if (httpCode == 200) {
+      Serial.println("✅ Mensaje enviado con éxito a Telegram!");
+    } else {
+      Serial.print("❌ Error HTTP al enviar: ");
+      Serial.println(httpCode);
+    }
+    https.end(); // Liberamos recursos
+  } else {
+    Serial.println("❌ No se pudo establecer conexión con Telegram.");
+  }
+}
+
+// ==========================================
+// ⚙️ SETUP: INICIALIZACIÓN
+// ==========================================
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  // 1. Conexión WiFi
+  Serial.print("Conectando a WiFi: ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("\n✔️ WiFi conectado!");
+
+  // 2. Inicialización del GPS
+  // Conexiones de Hardware (ESP32 <-> GPS):
+  // RX del ESP32 (Pin 13) se conecta al TX del GPS
+  // TX del ESP32 (Pin 12) se conecta al RX del GPS
+  GPSserial.begin(9600, SERIAL_8N1, 13, 12);
+
+  Serial.println("🛰️ Esperando señal satelital GPS (Esto puede tardar varios minutos al aire libre)...");
+}
+
+// ==========================================
+// 🔄 LOOP: CICLO PRINCIPAL
+// ==========================================
+void loop() {
+  // Leemos continuamente los datos que llegan desde el módulo GPS
+  while (GPSserial.available()) {
+    char c = GPSserial.read();
+    gps.encode(c); // La librería TinyGPSPlus descifra los datos en crudo
+  }
+
+  // Si el GPS ha procesado una nueva ubicación...
+  if (gps.location.isUpdated()) {
+    // Imprimimos los datos en el monitor serie para depuración
+    Serial.print("Latitud: "); Serial.println(gps.location.lat(), 6);
+    Serial.print("Longitud: "); Serial.println(gps.location.lng(), 6);
+    Serial.print("Satélites visibles: "); Serial.println(gps.satellites.value());
+    Serial.println("------------------");
+
+    // Lógica de envío: 
+    // Solo enviamos si no se ha enviado antes (!mensajeEnviado) 
+    // y si la ubicación es válida y tiene buena precisión (satélites >= 4)
+    if (!mensajeEnviado && gps.location.isValid() && gps.satellites.value() >= 4) {
+      enviarMensajeTelegram(gps.location.lat(), gps.location.lng());
+      mensajeEnviado = true; // Cambiamos el estado para no hacer spam al bot
+      Serial.println("🛑 Sistema en pausa tras el envío exitoso.");
+    }
+  }
+}
