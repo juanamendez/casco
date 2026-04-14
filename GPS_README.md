@@ -41,3 +41,5 @@ Este proyecto utiliza un microcontrolador **ESP32** y un módulo GPS (como el Ne
 
 ## 👨‍💻 Autor
 Creado por [Tu Nombre / Tu Usuario de GitHub] - Estudiante de la UA.
+<img width="1064" height="728" alt="image" src="https://github.com/user-attachments/assets/166cc5fc-d4b1-44ed-a49b-e8b65cd167ef" />
+
