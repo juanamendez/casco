@@ -1,0 +1,34 @@
+
+# Animaciones en Matriz LED MAX7219 con Arduino
+
+Este proyecto demuestra cómo mostrar dibujos personalizados (mapas de bits) y animaciones básicas en un módulo de matriz de LED 8x8 controlado por el chip MAX7219, utilizando la potencia de la librería Adafruit GFX.
+
+## 🚀 Funcionalidades
+El código principal alterna entre dos imágenes diseñadas a medida mediante una cuadrícula binaria:
+- Un corazón ❤️
+- Una carita feliz 🙂
+
+## 🛠️ Hardware Necesario
+- 1x Placa Arduino (Uno, Nano, Mega) o ESP32.
+- 1x Módulo Matriz LED 8x8 con MAX7219.
+- Cables jumper.
+
+## 🔌 Conexiones (Esquema SPI)
+
+| Módulo MAX7219 | Arduino Uno / Nano | ESP32 (Ejemplo) |
+| :--- | :--- | :--- |
+| **VCC** | 5V | 5V / 3.3V |
+| **GND** | GND | GND |
+| **DIN** | Pin 11 (MOSI) | Pin 23 |
+| **CS** | Pin 5 (Configurable) | Pin 5 |
+| **CLK** | Pin 13 (SCK) | Pin 18 |
+
+## 📚 Librerías Requeridas
+Para que este código compile correctamente, debes instalar las siguientes librerías desde el *Gestor de Librerías* del IDE de Arduino:
+1. `Adafruit GFX Library`
+2. `Max72xxPanel`
+
+## 💡 Cómo orientar la matriz
+Dependiendo del fabricante de tu módulo, es posible que las imágenes salgan giradas 90 grados. No es necesario modificar el cableado, simplemente cambia el parámetro en la función `setup()`:
+```cpp
+matrix.setRotation(0); // Prueba con 1, 2 o 3 hasta que quede derecho.
