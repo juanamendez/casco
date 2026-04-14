@@ -1,12 +1,4 @@
-## 🔌 Conexiones (Esquema SPI para ESP32)
-
-| Pin Matriz MAX7219 | Pin ESP32 | Notas |
-| :--- | :--- | :--- |
-| **VCC** | **5V (o VIN)** | La matriz requiere 5V para brillar con intensidad total. |
-| **GND** | **GND** | Tierra común. |
-| **DIN** (Data In) | **GPIO 23** | Pin MOSI estándar en ESP32. |
-| **CS** (Chip Select) | **GPIO 5** | También llamado SS. Puedes cambiarlo en el código. |
-| **CLK** (Clock) | **GPIO 18** | Pin SCK estándar en ESP32. |
+# Animaciones en Matriz LED MAX7219 con Arduino
 
 Este proyecto demuestra cómo mostrar dibujos personalizados (mapas de bits) y animaciones básicas en un módulo de matriz de LED 8x8 controlado por el chip MAX7219, utilizando la potencia de la librería Adafruit GFX.
 
@@ -22,13 +14,17 @@ El código principal alterna entre dos imágenes diseñadas a medida mediante un
 
 ## 🔌 Conexiones (Esquema SPI)
 
-| Módulo MAX7219 | Arduino Uno / Nano | ESP32 (Ejemplo) |
+Aquí tienes la tabla de pines para conectar la matriz a un microcontrolador ESP32:
+
+| Pin Matriz MAX7219 | Pin ESP32 | Notas |
 | :--- | :--- | :--- |
-| **VCC** | 5V | 5V / 3.3V |
-| **GND** | GND | GND |
-| **DIN** | Pin 11 (MOSI) | Pin 23 |
-| **CS** | Pin 5 (Configurable) | Pin 5 |
-| **CLK** | Pin 13 (SCK) | Pin 18 |
+| **VCC** | **5V (o VIN)** | La matriz requiere 5V para brillar con intensidad total. |
+| **GND** | **GND** | Tierra común. |
+| **DIN** (Data In) | **GPIO 23** | Pin MOSI estándar en ESP32. |
+| **CS** (Chip Select) | **GPIO 5** | También llamado SS. Puedes cambiarlo en el código. |
+| **CLK** (Clock) | **GPIO 18** | Pin SCK estándar en ESP32. |
+
+*(Nota: Si usas un Arduino Uno o Nano, los pines SPI estándar son DIN al 11 y CLK al 13).*
 
 ## 📚 Librerías Requeridas
 Para que este código compile correctamente, debes instalar las siguientes librerías desde el *Gestor de Librerías* del IDE de Arduino:
@@ -37,5 +33,6 @@ Para que este código compile correctamente, debes instalar las siguientes libre
 
 ## 💡 Cómo orientar la matriz
 Dependiendo del fabricante de tu módulo, es posible que las imágenes salgan giradas 90 grados. No es necesario modificar el cableado, simplemente cambia el parámetro en la función `setup()`:
+
 ```cpp
 matrix.setRotation(0); // Prueba con 1, 2 o 3 hasta que quede derecho.
