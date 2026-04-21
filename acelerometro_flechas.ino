@@ -8,7 +8,7 @@
 
 // --- CONFIGURACIÓN DE SENSIBILIDAD ---
 int umbralGiro = 550;           // Valor alto para que el movimiento sea BIEN marcado [cite: 513, 519]
-int umbralAdelante = 600;       // Sensibilidad para detectar cabeza hacia adelante [cite: 513, 522]
+int umbralAdelante = 150;       // Sensibilidad para detectar cabeza hacia adelante [cite: 513, 522]
 unsigned long duracionSinal = 5000; // 5 segundos [cite: 490, 809]
 
 // Variables de control
