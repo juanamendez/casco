@@ -43,4 +43,3 @@
 * [cite_start]`math.h` (Nativa para cálculos trigonométricos)[cite: 589].
 * [cite_start]`SPI.h` (Nativa para comunicación con la matriz LED)[cite: 702, 820].
 
----
