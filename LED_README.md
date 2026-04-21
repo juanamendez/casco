@@ -14,13 +14,15 @@ El código principal alterna entre dos imágenes diseñadas a medida mediante un
 
 ## 🔌 Conexiones (Esquema SPI)
 
-Aquí tienes la lista de pines para conectar la matriz a un ESP32:
 
-* **VCC** de la matriz ---> **5V** (o VIN) del ESP32
-* **GND** de la matriz ---> **GND** del ESP32
-* **DIN** de la matriz ---> **Pin 23** del ESP32
-* **CS** de la matriz ---> **Pin 5** del ESP32
-* **CLK** de la matriz ---> **Pin 18** del ESP32
+| Pin Matriz MAX7219 | Pin ESP32      | Notas                                                                 |
+|-------------------|---------------|-----------------------------------------------------------------------|
+| VCC               | 5V (o VIN)    | La matriz requiere 5V para brillar con intensidad total.             |
+| GND               | GND           | Tierra común.                                                         |
+| DIN (Data In)     | GPIO 23       | Pin MOSI estándar en ESP32.                                           |
+| CS (Chip Select)  | GPIO 5        | También llamado SS. Puedes cambiarlo en el código.                   |
+| CLK (Clock)       | GPIO 18       | Pin SCK estándar en ESP32.                                            |
+``
 
 ## 📚 Librerías Requeridas
 Para que este código compile correctamente, debes instalar las siguientes librerías desde el *Gestor de Librerías* del IDE de Arduino:
